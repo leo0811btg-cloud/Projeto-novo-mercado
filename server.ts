@@ -188,280 +188,275 @@ async function initDb() {
 const app = express();
 const PORT = 3000;
 
-async function startServer() {
-  console.log('Starting server...');
-  console.log('NODE_ENV:', process.env.NODE_ENV);
-  try {
-    await initDb();
-    console.log('Database initialized.');
-  } catch (err) {
-    console.error('Failed to initialize database:', err);
-    // Don't exit on Vercel, let the request fail
-    if (!process.env.VERCEL) process.exit(1);
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+app.get('/api/test', (req, res) => {
+  res.send('Server is alive!');
+});
+
+app.use(express.json());
+
+// Auth Route
+app.post('/api/auth/login', async (req, res) => {
+  const { username, password } = req.body;
+  
+  // Global Admin
+  if (username === 'admin' && password === 'admin') {
+    return res.json({ id: 0, name: 'Administrador Geral', username: 'admin', role: 'admin' });
+  }
+
+  let market;
+  if (useTurso) {
+    const result = await db.execute({
+      sql: 'SELECT id, name, username FROM markets WHERE username = ? AND password = ?',
+      args: [username, password]
+    });
+    market = result.rows[0];
+  } else {
+    market = db.prepare('SELECT id, name, username FROM markets WHERE username = ? AND password = ?').get(username, password);
   }
   
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
-    next();
-  });
+  if (market) {
+    res.json({ ...market, role: 'market' });
+  } else {
+    res.status(401).json({ error: 'Credenciais inválidas' });
+  }
+});
 
-  app.get('/api/test', (req, res) => {
-    res.send('Server is alive!');
-  });
+// API Routes
+app.get('/api/markets', async (req, res) => {
+  let markets;
+  if (useTurso) {
+    const result = await db.execute('SELECT * FROM markets');
+    markets = result.rows;
+  } else {
+    markets = db.prepare('SELECT * FROM markets').all();
+  }
+  res.json(markets);
+});
 
-  app.use(express.json());
+app.delete('/api/markets/:id', async (req, res) => {
+  const { id } = req.params;
+  if (useTurso) {
+    await db.execute({ sql: 'DELETE FROM offers WHERE market_id = ?', args: [id] });
+    await db.execute({ sql: 'DELETE FROM markets WHERE id = ?', args: [id] });
+  } else {
+    db.prepare('DELETE FROM offers WHERE market_id = ?').run(id);
+    db.prepare('DELETE FROM markets WHERE id = ?').run(id);
+  }
+  res.json({ success: true });
+});
 
-  // Auth Route
-  app.post('/api/auth/login', async (req, res) => {
-    const { username, password } = req.body;
-    
-    // Global Admin
-    if (username === 'admin' && password === 'admin') {
-      return res.json({ id: 0, name: 'Administrador Geral', username: 'admin', role: 'admin' });
-    }
+app.get('/api/markets/:id', async (req, res) => {
+  const { id } = req.params;
+  let market;
+  if (useTurso) {
+    const result = await db.execute({ sql: 'SELECT * FROM markets WHERE id = ?', args: [id] });
+    market = result.rows[0];
+  } else {
+    market = db.prepare('SELECT * FROM markets WHERE id = ?').get(id);
+  }
+  if (market) {
+    res.json(market);
+  } else {
+    res.status(404).json({ error: 'Market not found' });
+  }
+});
 
-    let market;
-    if (useTurso) {
-      const result = await db.execute({
-        sql: 'SELECT id, name, username FROM markets WHERE username = ? AND password = ?',
-        args: [username, password]
-      });
-      market = result.rows[0];
-    } else {
-      market = db.prepare('SELECT id, name, username FROM markets WHERE username = ? AND password = ?').get(username, password);
-    }
-    
-    if (market) {
-      res.json({ ...market, role: 'market' });
-    } else {
-      res.status(401).json({ error: 'Credenciais inválidas' });
-    }
-  });
-
-  // API Routes
-  app.get('/api/markets', async (req, res) => {
-    let markets;
-    if (useTurso) {
-      const result = await db.execute('SELECT * FROM markets');
-      markets = result.rows;
-    } else {
-      markets = db.prepare('SELECT * FROM markets').all();
-    }
-    res.json(markets);
-  });
-
-  app.delete('/api/markets/:id', async (req, res) => {
-    const { id } = req.params;
-    if (useTurso) {
-      await db.execute({ sql: 'DELETE FROM offers WHERE market_id = ?', args: [id] });
-      await db.execute({ sql: 'DELETE FROM markets WHERE id = ?', args: [id] });
-    } else {
-      db.prepare('DELETE FROM offers WHERE market_id = ?').run(id);
-      db.prepare('DELETE FROM markets WHERE id = ?').run(id);
-    }
-    res.json({ success: true });
-  });
-
-  app.get('/api/markets/:id', async (req, res) => {
-    const { id } = req.params;
-    let market;
-    if (useTurso) {
-      const result = await db.execute({ sql: 'SELECT * FROM markets WHERE id = ?', args: [id] });
-      market = result.rows[0];
-    } else {
-      market = db.prepare('SELECT * FROM markets WHERE id = ?').get(id);
-    }
-    if (market) {
-      res.json(market);
-    } else {
-      res.status(404).json({ error: 'Market not found' });
-    }
-  });
-
-  app.get('/api/products', async (req, res) => {
-    const { q } = req.query;
-    let query = 'SELECT * FROM products';
-    const params = [];
-    
-    if (q) {
-      query += ' WHERE name LIKE ? OR brand LIKE ?';
-      params.push(`%${q}%`, `%${q}%`);
-    }
-    
-    let products;
-    if (useTurso) {
-      const result = await db.execute({ sql: query, args: params });
-      products = result.rows;
-    } else {
-      products = db.prepare(query).all(...params);
-    }
-    res.json(products);
-  });
-
-  app.get('/api/categories', async (req, res) => {
-    let categories;
-    if (useTurso) {
-      const result = await db.execute('SELECT DISTINCT category FROM products WHERE category IS NOT NULL');
-      categories = result.rows;
-    } else {
-      categories = db.prepare('SELECT DISTINCT category FROM products WHERE category IS NOT NULL').all();
-    }
-    res.json(categories.map((c: any) => c.category));
-  });
-
-  app.get('/api/offers', async (req, res) => {
-    const { q, sort, markets, products, categories } = req.query;
-    let query = `
-      SELECT o.*, p.name as product_name, p.brand, p.image_url, p.category, m.name as market_name, m.logo as market_logo 
-      FROM offers o
-      JOIN products p ON o.product_id = p.id
-      JOIN markets m ON o.market_id = m.id
-      WHERE 1=1
-    `;
-    const params: any[] = [];
-
-    if (q) {
-      query += ' AND (p.name LIKE ? OR p.brand LIKE ?)';
-      params.push(`%${q}%`, `%${q}%`);
-    }
-
-    if (markets) {
-      const marketIds = (markets as string).split(',');
-      query += ` AND m.id IN (${marketIds.map(() => '?').join(',')})`;
-      params.push(...marketIds);
-    }
-
-    if (products) {
-      const productIds = (products as string).split(',');
-      query += ` AND p.id IN (${productIds.map(() => '?').join(',')})`;
-      params.push(...productIds);
-    }
-
-    if (categories) {
-      const categoryList = (categories as string).split(',');
-      query += ` AND p.category IN (${categoryList.map(() => '?').join(',')})`;
-      params.push(...categoryList);
-    }
-
-    if (sort === 'price_asc') {
-      query += ' ORDER BY price ASC';
-    } else if (sort === 'price_desc') {
-      query += ' ORDER BY price DESC';
-    } else {
-      query += ' ORDER BY o.created_at DESC';
-    }
-
-    let offers;
-    if (useTurso) {
-      const result = await db.execute({ sql: query, args: params });
-      offers = result.rows;
-    } else {
-      offers = db.prepare(query).all(...params);
-    }
-    res.json(offers);
-  });
-
-  app.delete('/api/offers/:id', async (req, res) => {
-    const { id } = req.params;
-    if (useTurso) {
-      await db.execute({ sql: 'DELETE FROM offers WHERE id = ?', args: [id] });
-    } else {
-      db.prepare('DELETE FROM offers WHERE id = ?').run(id);
-    }
-    res.json({ success: true });
-  });
-
-  app.get('/api/tabloides', async (req, res) => {
-    const query = `
-      SELECT t.*, m.name as market_name, m.logo as market_logo
-      FROM tabloides t
-      JOIN markets m ON t.market_id = m.id
-      ORDER BY t.created_at DESC
-    `;
-    let tabloides;
-    if (useTurso) {
-      const result = await db.execute(query);
-      tabloides = result.rows;
-    } else {
-      tabloides = db.prepare(query).all();
-    }
-    res.json(tabloides);
-  });
-
-  app.post('/api/tabloides', async (req, res) => {
-    const { market_id, title, pdf_url, valid_until } = req.body;
-    if (useTurso) {
-      const result = await db.execute({
-        sql: 'INSERT INTO tabloides (market_id, title, pdf_url, valid_until) VALUES (?, ?, ?, ?)',
-        args: [market_id, title, pdf_url, valid_until]
-      });
-      res.json({ id: result.lastInsertRowid });
-    } else {
-      const stmt = db.prepare('INSERT INTO tabloides (market_id, title, pdf_url, valid_until) VALUES (?, ?, ?, ?)');
-      const result = stmt.run(market_id, title, pdf_url, valid_until);
-      res.json({ id: result.lastInsertRowid });
-    }
-  });
-
-  app.delete('/api/tabloides/:id', async (req, res) => {
-    const { id } = req.params;
-    if (useTurso) {
-      await db.execute({ sql: 'DELETE FROM tabloides WHERE id = ?', args: [id] });
-    } else {
-      db.prepare('DELETE FROM tabloides WHERE id = ?').run(id);
-    }
-    res.json({ success: true });
-  });
+app.get('/api/products', async (req, res) => {
+  const { q } = req.query;
+  let query = 'SELECT * FROM products';
+  const params = [];
   
-  // Admin routes (simplified)
-  app.post('/api/admin/markets', async (req, res) => {
-    const { name, logo, address, phone, hours } = req.body;
-    if (useTurso) {
-      const result = await db.execute({
-        sql: 'INSERT INTO markets (name, logo, address, phone, hours) VALUES (?, ?, ?, ?, ?)',
-        args: [name, logo, address, phone, hours]
-      });
-      res.json({ id: result.lastInsertRowid });
-    } else {
-      const stmt = db.prepare('INSERT INTO markets (name, logo, address, phone, hours) VALUES (?, ?, ?, ?, ?)');
-      const result = stmt.run(name, logo, address, phone, hours);
-      res.json({ id: result.lastInsertRowid });
-    }
-  });
+  if (q) {
+    query += ' WHERE name LIKE ? OR brand LIKE ?';
+    params.push(`%${q}%`, `%${q}%`);
+  }
+  
+  let products;
+  if (useTurso) {
+    const result = await db.execute({ sql: query, args: params });
+    products = result.rows;
+  } else {
+    products = db.prepare(query).all(...params);
+  }
+  res.json(products);
+});
 
-  app.post('/api/admin/products', async (req, res) => {
-    const { name, brand, category, image_url } = req.body;
-    if (useTurso) {
-      const result = await db.execute({
-        sql: 'INSERT INTO products (name, brand, category, image_url) VALUES (?, ?, ?, ?)',
-        args: [name, brand, category, image_url]
-      });
-      res.json({ id: result.lastInsertRowid });
-    } else {
-      const stmt = db.prepare('INSERT INTO products (name, brand, category, image_url) VALUES (?, ?, ?, ?)');
-      const result = stmt.run(name, brand, category, image_url);
-      res.json({ id: result.lastInsertRowid });
-    }
-  });
+app.get('/api/categories', async (req, res) => {
+  let categories;
+  if (useTurso) {
+    const result = await db.execute('SELECT DISTINCT category FROM products WHERE category IS NOT NULL');
+    categories = result.rows;
+  } else {
+    categories = db.prepare('SELECT DISTINCT category FROM products WHERE category IS NOT NULL').all();
+  }
+  res.json(categories.map((c: any) => c.category));
+});
 
-  app.post('/api/admin/offers', async (req, res) => {
-    const { market_id, product_id, price, valid_until } = req.body;
-    if (useTurso) {
-      const result = await db.execute({
-        sql: 'INSERT INTO offers (market_id, product_id, price, valid_until) VALUES (?, ?, ?, ?)',
-        args: [market_id, product_id, price, valid_until]
-      });
-      res.json({ id: result.lastInsertRowid });
-    } else {
-      const stmt = db.prepare('INSERT INTO offers (market_id, product_id, price, valid_until) VALUES (?, ?, ?, ?)');
-      const result = stmt.run(market_id, product_id, price, valid_until);
-      res.json({ id: result.lastInsertRowid });
-    }
-  });
+app.get('/api/offers', async (req, res) => {
+  const { q, sort, markets, products, categories } = req.query;
+  let query = `
+    SELECT o.*, p.name as product_name, p.brand, p.image_url, p.category, m.name as market_name, m.logo as market_logo 
+    FROM offers o
+    JOIN products p ON o.product_id = p.id
+    JOIN markets m ON o.market_id = m.id
+    WHERE 1=1
+  `;
+  const params: any[] = [];
 
-  // Vite middleware
-  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
-    const { createServer: createViteServer } = await import('vite');
+  if (q) {
+    query += ' AND (p.name LIKE ? OR p.brand LIKE ?)';
+    params.push(`%${q}%`, `%${q}%`);
+  }
+
+  if (markets) {
+    const marketIds = (markets as string).split(',');
+    query += ` AND m.id IN (${marketIds.map(() => '?').join(',')})`;
+    params.push(...marketIds);
+  }
+
+  if (products) {
+    const productIds = (products as string).split(',');
+    query += ` AND p.id IN (${productIds.map(() => '?').join(',')})`;
+    params.push(...productIds);
+  }
+
+  if (categories) {
+    const categoryList = (categories as string).split(',');
+    query += ` AND p.category IN (${categoryList.map(() => '?').join(',')})`;
+    params.push(...categoryList);
+  }
+
+  if (sort === 'price_asc') {
+    query += ' ORDER BY price ASC';
+  } else if (sort === 'price_desc') {
+    query += ' ORDER BY price DESC';
+  } else {
+    query += ' ORDER BY o.created_at DESC';
+  }
+
+  let offers;
+  if (useTurso) {
+    const result = await db.execute({ sql: query, args: params });
+    offers = result.rows;
+  } else {
+    offers = db.prepare(query).all(...params);
+  }
+  res.json(offers);
+});
+
+app.delete('/api/offers/:id', async (req, res) => {
+  const { id } = req.params;
+  if (useTurso) {
+    await db.execute({ sql: 'DELETE FROM offers WHERE id = ?', args: [id] });
+  } else {
+    db.prepare('DELETE FROM offers WHERE id = ?').run(id);
+  }
+  res.json({ success: true });
+});
+
+app.get('/api/tabloides', async (req, res) => {
+  const query = `
+    SELECT t.*, m.name as market_name, m.logo as market_logo
+    FROM tabloides t
+    JOIN markets m ON t.market_id = m.id
+    ORDER BY t.created_at DESC
+  `;
+  let tabloides;
+  if (useTurso) {
+    const result = await db.execute(query);
+    tabloides = result.rows;
+  } else {
+    tabloides = db.prepare(query).all();
+  }
+  res.json(tabloides);
+});
+
+app.post('/api/tabloides', async (req, res) => {
+  const { market_id, title, pdf_url, valid_until } = req.body;
+  if (useTurso) {
+    const result = await db.execute({
+      sql: 'INSERT INTO tabloides (market_id, title, pdf_url, valid_until) VALUES (?, ?, ?, ?)',
+      args: [market_id, title, pdf_url, valid_until]
+    });
+    res.json({ id: result.lastInsertRowid });
+  } else {
+    const stmt = db.prepare('INSERT INTO tabloides (market_id, title, pdf_url, valid_until) VALUES (?, ?, ?, ?)');
+    const result = stmt.run(market_id, title, pdf_url, valid_until);
+    res.json({ id: result.lastInsertRowid });
+  }
+});
+
+app.delete('/api/tabloides/:id', async (req, res) => {
+  const { id } = req.params;
+  if (useTurso) {
+    await db.execute({ sql: 'DELETE FROM tabloides WHERE id = ?', args: [id] });
+  } else {
+    db.prepare('DELETE FROM tabloides WHERE id = ?').run(id);
+  }
+  res.json({ success: true });
+});
+
+// Admin routes (simplified)
+app.post('/api/admin/markets', async (req, res) => {
+  const { name, logo, address, phone, hours } = req.body;
+  if (useTurso) {
+    const result = await db.execute({
+      sql: 'INSERT INTO markets (name, logo, address, phone, hours) VALUES (?, ?, ?, ?, ?)',
+      args: [name, logo, address, phone, hours]
+    });
+    res.json({ id: result.lastInsertRowid });
+  } else {
+    const stmt = db.prepare('INSERT INTO markets (name, logo, address, phone, hours) VALUES (?, ?, ?, ?, ?)');
+    const result = stmt.run(name, logo, address, phone, hours);
+    res.json({ id: result.lastInsertRowid });
+  }
+});
+
+app.post('/api/admin/products', async (req, res) => {
+  const { name, brand, category, image_url } = req.body;
+  if (useTurso) {
+    const result = await db.execute({
+      sql: 'INSERT INTO products (name, brand, category, image_url) VALUES (?, ?, ?, ?)',
+      args: [name, brand, category, image_url]
+    });
+    res.json({ id: result.lastInsertRowid });
+  } else {
+    const stmt = db.prepare('INSERT INTO products (name, brand, category, image_url) VALUES (?, ?, ?, ?)');
+    const result = stmt.run(name, brand, category, image_url);
+    res.json({ id: result.lastInsertRowid });
+  }
+});
+
+app.post('/api/admin/offers', async (req, res) => {
+  const { market_id, product_id, price, valid_until } = req.body;
+  if (useTurso) {
+    const result = await db.execute({
+      sql: 'INSERT INTO offers (market_id, product_id, price, valid_until) VALUES (?, ?, ?, ?)',
+      args: [market_id, product_id, price, valid_until]
+    });
+    res.json({ id: result.lastInsertRowid });
+  } else {
+    const stmt = db.prepare('INSERT INTO offers (market_id, product_id, price, valid_until) VALUES (?, ?, ?, ?)');
+    const result = stmt.run(market_id, product_id, price, valid_until);
+    res.json({ id: result.lastInsertRowid });
+  }
+});
+
+// Initialize DB in background
+initDb().then(() => {
+  console.log('Database initialized.');
+}).catch(err => {
+  console.error('Failed to initialize database:', err);
+});
+
+// Vite middleware
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  import('vite').then(async ({ createServer: createViteServer }) => {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -480,22 +475,22 @@ async function startServer() {
         next(e);
       }
     });
-  } else {
-    // Serve static files in production
+
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on http://0.0.0.0:${PORT}`);
+    });
+  });
+} else {
+  // Serve static files in production (if not Vercel)
+  if (!process.env.VERCEL) {
     app.use(express.static(path.join(__dirname, 'dist')));
     app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, 'dist', 'index.html'));
     });
-  }
-
-  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://0.0.0.0:${PORT}`);
     });
   }
 }
-
-// Start initialization
-startServer();
 
 export default app;

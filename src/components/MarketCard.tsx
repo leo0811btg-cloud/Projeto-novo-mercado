@@ -13,7 +13,8 @@ const MarketCard: React.FC<MarketCardProps> = ({ market }) => {
   return (
     <motion.div 
       whileHover={{ y: -8 }}
-      className="group bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
+      onClick={() => navigate(`/market/${market.id}`)}
+      className="group bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 cursor-pointer"
     >
       <div className="relative h-48 overflow-hidden bg-gray-50">
         {market.cover_image ? (
@@ -52,7 +53,7 @@ const MarketCard: React.FC<MarketCardProps> = ({ market }) => {
         </div>
       </div>
       
-      <div className="p-6 sm:p-8 pt-8 sm:pt-10">
+      <div className="p-6 sm:p-8 pt-14 sm:pt-14">
         <div className="flex items-start justify-between mb-4">
           <div>
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-[#1E3A8A] transition-colors">{market.name}</h3>

@@ -38,7 +38,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#f8fafc]">
       <Hero onSearch={handleSearch} />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 pb-16 sm:pb-24">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-0 sm:-mt-10 relative z-20 pb-16 sm:pb-24">
         {/* Categories Section */}
         <section className="mb-12 sm:mb-20">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
@@ -154,10 +154,15 @@ export default function Home() {
               Junte-se a milhares de douradenses que já estão economizando todos os dias com o PreçoCerto.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="w-full sm:w-auto bg-green-500 text-white px-8 sm:px-10 py-4 rounded-2xl font-bold hover:bg-green-600 transition shadow-xl shadow-green-900/20 flex items-center justify-center gap-3">
+              <a 
+                href="https://chat.whatsapp.com/your-group-link" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto bg-green-500 text-white px-8 sm:px-10 py-4 rounded-2xl font-bold hover:bg-green-600 transition shadow-xl shadow-green-900/20 flex items-center justify-center gap-3"
+              >
                 <Zap className="h-5 w-5 fill-white" />
                 Entrar no Grupo WhatsApp
-              </button>
+              </a>
               <button className="w-full sm:w-auto bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 sm:px-10 py-4 rounded-2xl font-bold hover:bg-white/20 transition">
                 Saiba Mais
               </button>

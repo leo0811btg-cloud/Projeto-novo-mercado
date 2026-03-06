@@ -29,7 +29,7 @@ export default function Navbar() {
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        shouldHaveBackground ? 'py-2 glass shadow-lg' : 'py-4 bg-transparent'
+        shouldHaveBackground ? 'py-2 bg-[#1E3A8A]/95 backdrop-blur-md shadow-lg' : 'py-4 bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,10 +40,10 @@ export default function Navbar() {
                 <ShoppingBag className="h-6 w-6 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className={`font-bold text-xl leading-none tracking-tight ${shouldHaveBackground ? 'text-[#1E3A8A]' : 'text-white'}`}>
+                <span className="font-bold text-xl leading-none tracking-tight text-white">
                   PreçoCerto <span className="text-[#F97316]">Dourados</span>
                 </span>
-                <span className={`text-[10px] font-medium uppercase tracking-widest ${shouldHaveBackground ? 'text-gray-500' : 'text-blue-100'}`}>
+                <span className="text-[10px] font-medium uppercase tracking-widest text-blue-100">
                   O 067 que economiza
                 </span>
               </div>
@@ -57,9 +57,7 @@ export default function Navbar() {
                   className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                     location.pathname === link.path
                       ? 'bg-[#F97316] text-white shadow-md'
-                      : shouldHaveBackground 
-                        ? 'text-gray-600 hover:bg-gray-100' 
-                        : 'text-white hover:bg-white/10'
+                      : 'text-white hover:bg-white/10'
                   }`}
                 >
                   {link.name}
@@ -69,11 +67,11 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <div className={`flex items-center gap-1 text-xs font-medium ${shouldHaveBackground ? 'text-gray-500' : 'text-blue-100'}`}>
+            <div className="flex items-center gap-1 text-xs font-medium text-blue-100">
               <MapPin className="h-3 w-3" />
               Dourados, MS
             </div>
-            <button className={`p-2 rounded-full transition-all ${shouldHaveBackground ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-white/10 text-white hover:bg-white/20'}`}>
+            <button className="p-2 rounded-full transition-all bg-white/10 text-white hover:bg-white/20">
               <Search className="h-5 w-5" />
             </button>
           </div>
@@ -81,7 +79,7 @@ export default function Navbar() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`p-2 rounded-xl transition-all ${shouldHaveBackground ? 'bg-gray-100 text-gray-600' : 'bg-white/10 text-white'}`}
+              className="p-2 rounded-xl transition-all bg-white/10 text-white"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -95,7 +93,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden glass absolute top-full left-0 right-0 shadow-2xl overflow-hidden"
+            className="md:hidden bg-[#1E3A8A] absolute top-full left-0 right-0 shadow-2xl border-t border-white/10 overflow-hidden"
           >
             <div className="px-4 pt-4 pb-6 space-y-2">
               {navLinks.map((link) => (
@@ -106,7 +104,7 @@ export default function Navbar() {
                   className={`block px-4 py-3 rounded-xl text-base font-bold transition-all ${
                     location.pathname === link.path
                       ? 'bg-[#F97316] text-white'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      : 'text-white hover:bg-white/10'
                   }`}
                 >
                   {link.name}

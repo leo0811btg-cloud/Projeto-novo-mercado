@@ -15,7 +15,7 @@ export default function Hero({ onSearch }: HeroProps) {
   };
 
   return (
-    <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#1E3A8A]">
+    <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#1E3A8A] pb-12 sm:pb-20">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-[#F97316] rounded-full blur-[120px] opacity-20 animate-pulse" />

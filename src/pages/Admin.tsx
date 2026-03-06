@@ -183,28 +183,28 @@ export default function Admin() {
           </div>
           <div className="flex items-center gap-4">
             {user?.role === 'admin' && (
-              <div className="flex bg-gray-100 p-1 rounded-2xl">
+              <div className="flex flex-wrap bg-gray-100 p-1 rounded-2xl gap-1">
                 <button 
                   onClick={() => setActiveTab('dashboard')}
-                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'dashboard' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all flex-grow sm:flex-grow-0 ${activeTab === 'dashboard' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   Dashboard
                 </button>
                 <button 
                   onClick={() => setActiveTab('markets')}
-                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'markets' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all flex-grow sm:flex-grow-0 ${activeTab === 'markets' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   Mercados
                 </button>
                 <button 
                   onClick={() => setActiveTab('offers')}
-                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'offers' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all flex-grow sm:flex-grow-0 ${activeTab === 'offers' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   Ofertas
                 </button>
                 <button 
                   onClick={() => setActiveTab('tabloides')}
-                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'tabloides' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all flex-grow sm:flex-grow-0 ${activeTab === 'tabloides' ? 'bg-white shadow-sm text-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   Tabloides
                 </button>

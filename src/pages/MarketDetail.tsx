@@ -88,7 +88,7 @@ export default function MarketDetail() {
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
         
         <button 
           onClick={() => navigate(-1)}
@@ -97,9 +97,9 @@ export default function MarketDetail() {
           <ChevronLeft className="h-6 w-6" />
         </button>
 
-        <div className="absolute bottom-8 left-0 right-0 px-4 sm:px-8">
+        <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-8 pb-6 sm:pb-8 pt-20 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
               <div className="h-20 w-20 sm:h-24 sm:w-24 bg-white rounded-3xl p-2 shadow-2xl flex-shrink-0 flex items-center justify-center overflow-hidden">
                 {market.logo ? (
                   <img src={market.logo} alt={market.name} className="h-full w-full object-contain" />
@@ -122,7 +122,7 @@ export default function MarketDetail() {
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <a 
                 href={`tel:${market.phone}`}
                 className="flex-grow sm:flex-grow-0 bg-white text-[#1E3A8A] px-6 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-blue-50 transition shadow-lg"

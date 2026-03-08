@@ -11,6 +11,7 @@ import SearchPage from './pages/Search';
 import MarketDetail from './pages/MarketDetail';
 import Admin from './pages/Admin';
 import Tabloides from './pages/Tabloides';
+import BestBuy from './pages/BestBuy';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/market/:id" element={<MarketDetail />} />
             <Route path="/tabloides" element={<Tabloides />} />
+            <Route path="/melhor-compra" element={<BestBuy />} />
             <Route path="/admin" element={<Admin />} />
             {/* Add other routes as needed */}
           </Routes>

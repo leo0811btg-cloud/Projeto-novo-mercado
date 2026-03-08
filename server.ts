@@ -119,7 +119,25 @@ async function initDb() {
       ['Feijão Carioca 1kg', 'Camil', 'Alimentos', 'https://images.unsplash.com/photo-1551462147-37885acc36f1?q=80&w=800&auto=format&fit=crop'],
       ['Leite Integral 1L', 'Ninho', 'Bebidas', 'https://images.unsplash.com/photo-1563636619-e9143da7973b?q=80&w=800&auto=format&fit=crop'],
       ['Café em Pó 500g', 'Pilão', 'Bebidas', 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800&auto=format&fit=crop'],
-      ['Detergente Líquido 500ml', 'Ypê', 'Limpeza', 'https://images.unsplash.com/photo-1585837575652-267c041d77d4?q=80&w=800&auto=format&fit=crop']
+      ['Detergente Líquido 500ml', 'Ypê', 'Limpeza', 'https://images.unsplash.com/photo-1585837575652-267c041d77d4?q=80&w=800&auto=format&fit=crop'],
+      ['Açúcar Refinado 1kg', 'União', 'Alimentos', 'https://images.unsplash.com/photo-1581441363689-1f3c3c414635?q=80&w=800&auto=format&fit=crop'],
+      ['Macarrão Espaguete 500g', 'Barilla', 'Alimentos', 'https://images.unsplash.com/photo-1551462147-ff29053fad3e?q=80&w=800&auto=format&fit=crop'],
+      ['Sal Refinado 1kg', 'Lebre', 'Alimentos', 'https://images.unsplash.com/photo-1610348725531-843dff563e2c?q=80&w=800&auto=format&fit=crop'],
+      ['Farinha de Trigo 1kg', 'Dona Benta', 'Alimentos', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=800&auto=format&fit=crop'],
+      ['Ovos Brancos 12un', 'Granja', 'Alimentos', 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?q=80&w=800&auto=format&fit=crop'],
+      ['Frango Inteiro kg', 'Sadia', 'Carnes', 'https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=800&auto=format&fit=crop'],
+      ['Sabão em Pó 800g', 'Omo', 'Limpeza', 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=800&auto=format&fit=crop'],
+      ['Papel Higiênico 4un', 'Neve', 'Limpeza', 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?q=80&w=800&auto=format&fit=crop'],
+      ['Farinha de Mandioca 1kg', 'Yoki', 'Alimentos', 'https://images.unsplash.com/photo-1595033538458-948001551967?q=80&w=800&auto=format&fit=crop'],
+      ['Carne Alcatra kg', 'Friboi', 'Carnes', 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?q=80&w=800&auto=format&fit=crop'],
+      ['Manteiga com Sal 200g', 'Itambé', 'Alimentos', 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?q=80&w=800&auto=format&fit=crop'],
+      ['Pão Francês kg', 'Padaria', 'Alimentos', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=800&auto=format&fit=crop'],
+      ['Batata Monalisa kg', 'Hortifruti', 'Hortifruti', 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?q=80&w=800&auto=format&fit=crop'],
+      ['Tomate Italiano kg', 'Hortifruti', 'Hortifruti', 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?q=80&w=800&auto=format&fit=crop'],
+      ['Banana Nanica kg', 'Hortifruti', 'Hortifruti', 'https://images.unsplash.com/photo-1571771894821-ad9902535cc3?q=80&w=800&auto=format&fit=crop'],
+      ['Água Sanitária 2L', 'Qboa', 'Limpeza', 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=800&auto=format&fit=crop'],
+      ['Creme Dental 90g', 'Colgate', 'Higiene', 'https://images.unsplash.com/photo-1559591937-e6b72024c30a?q=80&w=800&auto=format&fit=crop'],
+      ['Sabonete 90g', 'Dove', 'Higiene', 'https://images.unsplash.com/photo-1600857062241-98e5dba7f214?q=80&w=800&auto=format&fit=crop']
     ];
 
     const today = new Date();
@@ -181,6 +199,87 @@ async function initDb() {
       marketIds.forEach((mId, idx) => {
         insertTabloide.run(mId, `Ofertas de Março - ${markets[idx][0]}`, 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', validUntil);
       });
+    }
+  }
+
+  // Ensure all products exist even if DB was already seeded
+  const productsToEnsure = [
+    ['Arroz Branco 5kg', 'Tio João', 'Alimentos', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=800&auto=format&fit=crop'],
+    ['Óleo de Soja 900ml', 'Liza', 'Alimentos', 'https://plus.unsplash.com/premium_photo-1667546202655-7f123068d122?q=80&w=800&auto=format&fit=crop'],
+    ['Feijão Carioca 1kg', 'Camil', 'Alimentos', 'https://images.unsplash.com/photo-1551462147-37885acc36f1?q=80&w=800&auto=format&fit=crop'],
+    ['Leite Integral 1L', 'Ninho', 'Bebidas', 'https://images.unsplash.com/photo-1563636619-e9143da7973b?q=80&w=800&auto=format&fit=crop'],
+    ['Café em Pó 500g', 'Pilão', 'Bebidas', 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800&auto=format&fit=crop'],
+    ['Detergente Líquido 500ml', 'Ypê', 'Limpeza', 'https://images.unsplash.com/photo-1585837575652-267c041d77d4?q=80&w=800&auto=format&fit=crop'],
+    ['Açúcar Refinado 1kg', 'União', 'Alimentos', 'https://images.unsplash.com/photo-1581441363689-1f3c3c414635?q=80&w=800&auto=format&fit=crop'],
+    ['Macarrão Espaguete 500g', 'Barilla', 'Alimentos', 'https://images.unsplash.com/photo-1551462147-ff29053fad3e?q=80&w=800&auto=format&fit=crop'],
+    ['Sal Refinado 1kg', 'Lebre', 'Alimentos', 'https://images.unsplash.com/photo-1610348725531-843dff563e2c?q=80&w=800&auto=format&fit=crop'],
+    ['Farinha de Trigo 1kg', 'Dona Benta', 'Alimentos', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=800&auto=format&fit=crop'],
+    ['Ovos Brancos 12un', 'Granja', 'Alimentos', 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?q=80&w=800&auto=format&fit=crop'],
+    ['Frango Inteiro kg', 'Sadia', 'Carnes', 'https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=800&auto=format&fit=crop'],
+    ['Sabão em Pó 800g', 'Omo', 'Limpeza', 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=800&auto=format&fit=crop'],
+    ['Papel Higiênico 4un', 'Neve', 'Limpeza', 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?q=80&w=800&auto=format&fit=crop'],
+    ['Farinha de Mandioca 1kg', 'Yoki', 'Alimentos', 'https://images.unsplash.com/photo-1595033538458-948001551967?q=80&w=800&auto=format&fit=crop'],
+    ['Carne Alcatra kg', 'Friboi', 'Carnes', 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?q=80&w=800&auto=format&fit=crop'],
+    ['Manteiga com Sal 200g', 'Itambé', 'Alimentos', 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?q=80&w=800&auto=format&fit=crop'],
+    ['Pão Francês kg', 'Padaria', 'Alimentos', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=800&auto=format&fit=crop'],
+    ['Batata Monalisa kg', 'Hortifruti', 'Hortifruti', 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?q=80&w=800&auto=format&fit=crop'],
+    ['Tomate Italiano kg', 'Hortifruti', 'Hortifruti', 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?q=80&w=800&auto=format&fit=crop'],
+    ['Banana Nanica kg', 'Hortifruti', 'Hortifruti', 'https://images.unsplash.com/photo-1571771894821-ad9902535cc3?q=80&w=800&auto=format&fit=crop'],
+    ['Água Sanitária 2L', 'Qboa', 'Limpeza', 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=800&auto=format&fit=crop'],
+    ['Creme Dental 90g', 'Colgate', 'Higiene', 'https://images.unsplash.com/photo-1559591937-e6b72024c30a?q=80&w=800&auto=format&fit=crop'],
+    ['Sabonete 90g', 'Dove', 'Higiene', 'https://images.unsplash.com/photo-1600857062241-98e5dba7f214?q=80&w=800&auto=format&fit=crop']
+  ];
+
+  for (const p of productsToEnsure) {
+    let productId;
+    if (useTurso) {
+      const exists = await db.execute({ sql: 'SELECT id FROM products WHERE name = ?', args: [p[0]] });
+      if (exists.rows.length === 0) {
+        const res = await db.execute({ sql: 'INSERT INTO products (name, brand, category, image_url) VALUES (?, ?, ?, ?)', args: p });
+        productId = res.lastInsertRowid;
+      } else {
+        productId = exists.rows[0].id;
+      }
+      
+      // Ensure each market has an offer for this product
+      const markets = await db.execute('SELECT id FROM markets');
+      for (const m of markets.rows) {
+        const offerExists = await db.execute({ 
+          sql: 'SELECT id FROM offers WHERE market_id = ? AND product_id = ?', 
+          args: [m.id, productId] 
+        });
+        if (offerExists.rows.length === 0) {
+          const today = new Date();
+          const nextWeek = new Date(today);
+          nextWeek.setDate(today.getDate() + 7);
+          const validUntil = nextWeek.toISOString().split('T')[0];
+          await db.execute({
+            sql: 'INSERT INTO offers (market_id, product_id, price, valid_until) VALUES (?, ?, ?, ?)',
+            args: [m.id, productId, (Math.random() * 20 + 5).toFixed(2), validUntil]
+          });
+        }
+      }
+    } else {
+      const exists = db.prepare('SELECT id FROM products WHERE name = ?').get(p[0]) as any;
+      if (!exists) {
+        const res = db.prepare('INSERT INTO products (name, brand, category, image_url) VALUES (?, ?, ?, ?)').run(...p);
+        productId = res.lastInsertRowid;
+      } else {
+        productId = exists.id;
+      }
+
+      // Ensure each market has an offer for this product
+      const markets = db.prepare('SELECT id FROM markets').all() as any[];
+      for (const m of markets) {
+        const offerExists = db.prepare('SELECT id FROM offers WHERE market_id = ? AND product_id = ?').get(m.id, productId);
+        if (!offerExists) {
+          const today = new Date();
+          const nextWeek = new Date(today);
+          nextWeek.setDate(today.getDate() + 7);
+          const validUntil = nextWeek.toISOString().split('T')[0];
+          db.prepare('INSERT INTO offers (market_id, product_id, price, valid_until) VALUES (?, ?, ?, ?)').run(m.id, productId, (Math.random() * 20 + 5).toFixed(2), validUntil);
+        }
+      }
     }
   }
 }

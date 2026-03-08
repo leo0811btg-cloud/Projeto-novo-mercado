@@ -64,6 +64,37 @@ export default function Home() {
         <section className="mb-16 sm:mb-24">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4">
             <div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Cesta Básica em Dourados</h2>
+              <p className="text-gray-500 font-medium mt-1 sm:mt-2 text-sm sm:text-base">Compare os itens essenciais e economize no rancho do mês.</p>
+            </div>
+            <button onClick={() => navigate('/melhor-compra')} className="flex items-center gap-2 text-[#F97316] font-bold hover:gap-3 transition-all text-sm sm:text-base">
+              Ver Comparativo Completo <span className="text-xl">→</span>
+            </button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {['Arroz', 'Feijão', 'Óleo', 'Leite', 'Café', 'Açúcar'].map((item, idx) => (
+              <motion.div
+                key={item}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                onClick={() => handleSearch(item)}
+                className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 cursor-pointer hover:shadow-md transition-all"
+              >
+                <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
+                  <ShoppingBasket className="h-6 w-6 text-[#F97316]" />
+                </div>
+                <span className="font-bold text-gray-700 text-xs">{item}</span>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Featured Markets */}
+        <section className="mb-16 sm:mb-24">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4">
+            <div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Mercados Parceiros</h2>
               <p className="text-gray-500 font-medium mt-1 sm:mt-2 text-sm sm:text-base">Os melhores estabelecimentos de Dourados em um só lugar.</p>
             </div>
@@ -98,7 +129,7 @@ export default function Home() {
             </div>
             
             <div className="p-6 sm:p-10">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              <div className="flex overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                 {offers.map((offer, idx) => (
                   <motion.div 
                     key={offer.id}
@@ -106,7 +137,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
-                    className="group relative bg-gray-50 rounded-3xl p-6 hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-gray-100"
+                    className="min-w-[260px] sm:min-w-0 snap-center group relative bg-gray-50 rounded-3xl p-6 hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-gray-100"
                   >
                     <div className="absolute top-4 right-4 z-10">
                       <div className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-tighter">

@@ -11,6 +11,7 @@ export default function Admin() {
   const [markets, setMarkets] = useState<any[]>([]);
   const [offers, setOffers] = useState<any[]>([]);
   const [tabloides, setTabloides] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
 
   // Tabloide form state
   const [tabloideTitle, setTabloideTitle] = useState('');
@@ -44,8 +45,15 @@ export default function Admin() {
       fetchMarkets();
       fetchOffers();
       fetchTabloides();
+      fetchProducts();
     }
   }, [isLoggedIn, user]);
+
+  const fetchProducts = async () => {
+    const res = await fetch('/api/products');
+    const data = await res.json();
+    setProducts(data);
+  };
 
   const fetchMarkets = async () => {
     const res = await fetch('/api/markets');
@@ -302,12 +310,38 @@ export default function Admin() {
                       <div className="space-y-2">
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Produto</label>
                         <select className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-[#1E3A8A] transition-all font-bold appearance-none">
-                          <option>Arroz Branco 5kg</option>
-                          <option>Óleo de Soja 900ml</option>
-                          <option>Feijão Carioca 1kg</option>
-                          <option>Leite Integral 1L</option>
-                          <option>Café em Pó 500g</option>
-                          <option>Detergente Líquido 500ml</option>
+                          {products.length > 0 ? (
+                            products.map(p => (
+                              <option key={p.id} value={p.id}>{p.name} ({p.brand})</option>
+                            ))
+                          ) : (
+                            <>
+                              <option>Arroz Branco 5kg</option>
+                              <option>Óleo de Soja 900ml</option>
+                              <option>Feijão Carioca 1kg</option>
+                              <option>Leite Integral 1L</option>
+                              <option>Café em Pó 500g</option>
+                              <option>Detergente Líquido 500ml</option>
+                              <option>Açúcar Refinado 1kg</option>
+                              <option>Macarrão Espaguete 500g</option>
+                              <option>Sal Refinado 1kg</option>
+                              <option>Farinha de Trigo 1kg</option>
+                              <option>Farinha de Mandioca 1kg</option>
+                              <option>Ovos Brancos 12un</option>
+                              <option>Frango Inteiro kg</option>
+                              <option>Carne Alcatra kg</option>
+                              <option>Manteiga com Sal 200g</option>
+                              <option>Pão Francês kg</option>
+                              <option>Batata Monalisa kg</option>
+                              <option>Tomate Italiano kg</option>
+                              <option>Banana Nanica kg</option>
+                              <option>Sabão em Pó 800g</option>
+                              <option>Água Sanitária 2L</option>
+                              <option>Papel Higiênico 4un</option>
+                              <option>Creme Dental 90g</option>
+                              <option>Sabonete 90g</option>
+                            </>
+                          )}
                         </select>
                       </div>
                       <div className="space-y-2">

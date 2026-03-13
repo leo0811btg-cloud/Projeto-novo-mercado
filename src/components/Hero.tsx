@@ -15,65 +15,58 @@ export default function Hero({ onSearch }: HeroProps) {
   };
 
   return (
-    <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#1E3A8A] pb-12 sm:pb-20">
+    <div className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden bg-primary pt-24 pb-16 sm:pb-24">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-[#F97316] rounded-full blur-[120px] opacity-20 animate-pulse" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-blue-400 rounded-full blur-[120px] opacity-20" />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.15),transparent_50%)]" />
+        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-[linear-gradient(to_top,rgba(15,23,42,1),transparent)]" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-blue-100 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-6 sm:mb-8">
-            <Zap className="h-3 w-3 text-[#F97316]" />
-            Economia Real em Dourados
+          <div className="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur-2xl border border-white/10 text-secondary text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.25em] mb-6 sm:mb-10 shadow-2xl">
+            <Zap className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-secondary" />
+            Market Intelligence & Price Analytics
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white mb-4 sm:mb-6 tracking-tight leading-tight">
-            Economize de verdade <br className="hidden sm:block" />
-            nos mercados de <span className="text-[#F97316] relative">
-              Dourados
-              <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#F97316]/30" viewBox="0 0 100 10" preserveAspectRatio="none">
-                <path d="M0 5 Q 25 0 50 5 T 100 5" stroke="currentColor" strokeWidth="4" fill="none" />
-              </svg>
-            </span>
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white mb-6 sm:mb-8 tracking-tight leading-[1.1] sm:leading-[0.95] max-w-5xl mx-auto">
+            A inteligência por trás da sua <span className="text-secondary italic font-serif">economia.</span>
           </h1>
           
-          <p className="text-blue-100 text-base sm:text-lg md:text-xl mb-8 sm:mb-12 max-w-2xl mx-auto font-medium opacity-90 px-4">
-            A plataforma número 1 para comparar preços, encontrar tabloides e economizar tempo nas suas compras do mês.
+          <p className="text-white/60 text-base sm:text-xl md:text-2xl mb-10 sm:mb-16 max-w-3xl mx-auto font-medium leading-relaxed px-2 sm:px-4">
+            Conectamos consumidores e mercados através de dados em tempo real, 
+            impulsionando o varejo de Dourados com transparência e tecnologia.
           </p>
         </motion.div>
         
         <motion.form 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           onSubmit={handleSubmit} 
-          className="max-w-3xl mx-auto relative group px-4 sm:px-0"
+          className="max-w-4xl mx-auto relative group"
         >
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-3xl sm:rounded-2xl shadow-2xl overflow-hidden p-2 border-4 border-white/10 group-focus-within:border-[#F97316]/30 transition-all gap-2 sm:gap-0">
-            <div className="flex items-center flex-grow">
-              <div className="pl-4">
-                <Search className="h-6 w-6 text-gray-400" />
-              </div>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white/5 backdrop-blur-3xl rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] overflow-hidden p-2 sm:p-2.5 border border-white/10 group-focus-within:border-secondary/50 group-focus-within:shadow-[0_32px_64px_-16px_rgba(245,158,11,0.15)] transition-all duration-500 gap-2 sm:gap-0">
+            <div className="flex items-center flex-grow bg-white rounded-[1.5rem] px-4 sm:px-6 py-1">
+              <Search className="h-5 w-5 sm:h-6 sm:w-6 text-primary/30" />
               <input
                 type="text"
-                className="w-full px-4 py-3 sm:py-4 text-gray-800 focus:outline-none text-base sm:text-lg font-medium"
-                placeholder="O que você quer comprar?"
+                className="w-full px-3 sm:px-4 py-3.5 sm:py-5 text-primary focus:outline-none text-base sm:text-xl font-semibold placeholder:text-primary/20"
+                placeholder="Pesquisar preços..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>
             <button
               type="submit"
-              className="bg-[#F97316] text-white px-6 sm:px-10 py-4 rounded-2xl sm:rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-500/40 active:scale-95"
+              className="bg-secondary text-primary px-8 sm:px-14 py-4 sm:py-5 rounded-[1.5rem] font-bold text-base sm:text-lg hover:bg-white transition-all duration-500 shadow-xl active:scale-95 sm:ml-3"
             >
-              Comparar
+              Analisar
             </button>
           </div>
         </motion.form>
@@ -81,16 +74,22 @@ export default function Hero({ onSearch }: HeroProps) {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-12 flex flex-wrap justify-center gap-8 text-blue-100/60"
+          transition={{ delay: 1, duration: 1 }}
+          className="mt-20 flex flex-wrap justify-center gap-12 text-white/30"
         >
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5" />
-            <span className="text-sm font-semibold">Preços Verificados</span>
+          <div className="flex flex-col items-center gap-3">
+            <ShieldCheck className="h-7 w-7 text-secondary/50" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Dados Auditados</span>
           </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
-            <span className="text-sm font-semibold">Atualizado Diariamente</span>
+          <div className="h-12 w-[1px] bg-white/5 hidden sm:block" />
+          <div className="flex flex-col items-center gap-3">
+            <TrendingUp className="h-7 w-7 text-secondary/50" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Market Insights</span>
+          </div>
+          <div className="h-12 w-[1px] bg-white/5 hidden sm:block" />
+          <div className="flex flex-col items-center gap-3">
+            <Zap className="h-7 w-7 text-secondary/50" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Real-time Sync</span>
           </div>
         </motion.div>
       </div>
